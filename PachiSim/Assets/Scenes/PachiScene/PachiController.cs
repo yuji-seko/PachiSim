@@ -14,8 +14,8 @@ namespace PachiSim.Scenes.PachiScene
         [SerializeField] private Chucker            m_chucker           = null;
         [SerializeField] private LotteryMachine     m_lotteryMachine    = null;
         [SerializeField] private DataCounterUI      m_dataCounter       = null;
-        [SerializeField] private StockHolderView    m_reserveHolder     = null;
         [SerializeField] private StockHolder        m_stockHolder       = null;
+        [SerializeField] private StockHolderView    m_stockHolderView   = null;
 
         //=================================================
         // Fields ( private static )
@@ -55,7 +55,7 @@ namespace PachiSim.Scenes.PachiScene
 
             // 保留
             m_stockHolder.Init();
-            m_reserveHolder.Init();
+            m_stockHolderView.Init();
 
             // データカウンター
             m_dataCounter.Init();

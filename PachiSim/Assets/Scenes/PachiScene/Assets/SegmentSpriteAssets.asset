@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ee1fce32dcb66846ae155ff52a22e0d, type: 3}
+  m_Name: SegmentSpriteAssets
+  m_EditorClassIdentifier: 
+  m_sprites:
+  - {fileID: 21300000, guid: 2c8a006b65369a74e9f8d3332083dd94, type: 3}
+  - {fileID: 21300000, guid: d15110e0f36badd4194b13fe4bbabbe4, type: 3}
+  - {fileID: 21300000, guid: 9ee1ae777b7781a438671f8c4d57a91f, type: 3}
+  - {fileID: 21300000, guid: baeb76b617d9b9648bc8febfb4ff62fb, type: 3}
+  - {fileID: 21300000, guid: 340e888f41a172b48a78fd6d27e51a50, type: 3}
+  - {fileID: 21300000, guid: cbc97d7c25f51f9488397f322a28ade7, type: 3}
+  - {fileID: 21300000, guid: a46a17d51ce773343b020188f2b3c782, type: 3}
+  - {fileID: 21300000, guid: 0574fe17853600f4e9be7ea79d10ffec, type: 3}
+  - {fileID: 21300000, guid: f4483ef7d19da27418a99b0c0085554d, type: 3}
+  - {fileID: 21300000, guid: ec3a817e9f08c4b41805569e212095cf, type: 3}
