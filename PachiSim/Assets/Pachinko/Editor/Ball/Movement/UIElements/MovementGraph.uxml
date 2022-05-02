@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="HeaderLayout" style="flex-direction: row-reverse; justify-content: space-between; flex-shrink: 1; border-left-color: rgb(128, 128, 128); border-right-color: rgb(128, 128, 128); border-top-color: rgb(128, 128, 128); border-bottom-color: rgb(128, 128, 128); border-bottom-width: 0; background-color: rgb(77, 77, 77);">
+        <ui:VisualElement style="flex-direction: row-reverse;">
+            <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveButton" style="flex-direction: row; justify-content: flex-end; align-items: stretch; white-space: nowrap; right: auto; left: auto; width: auto; position: relative; top: auto;" />
+            <ui:Button text="Reset" display-tooltip-when-elided="true" name="ResetButton" style="flex-direction: row; justify-content: flex-end; align-items: stretch; white-space: nowrap; right: auto; left: auto; width: auto; position: relative; top: auto;" />
+        </ui:VisualElement>
+        <ui:Label text="Movement Graph" display-tooltip-when-elided="true" enable-rich-text="false" name="Title" usage-hints="None" style="flex-direction: column; right: auto; -unity-text-align: middle-center; flex-shrink: 0; width: auto; white-space: nowrap; border-bottom-width: 0; justify-content: space-around; align-items: flex-start; height: auto; left: auto; visibility: visible; overflow: visible; margin-left: 3px; margin-top: 2px; margin-bottom: 2px; flex-wrap: nowrap;" />
+    </ui:VisualElement>
+    <ui:TextField picking-mode="Ignore" label="Name" value="filler text" text="filler text" name="FileName" style="border-left-color: rgb(118, 118, 118); border-right-color: rgb(118, 118, 118); border-top-color: rgb(118, 118, 118); border-bottom-color: rgb(118, 118, 118); border-bottom-width: 1px;" />
+</ui:UXML>

@@ -28,5 +28,17 @@ namespace PachiSim.Scenes.PachiScene
             m_startButton.OnClick = () => m_pachiController.Begin();
             m_stopButton.OnClick = () => m_pachiController.Stop();
         }
+
+        private void Update()
+        {
+
+            foreach( var keycode in System.Enum.GetValues( typeof( KeyCode ) ) as KeyCode[] )
+            {
+                if ( Input.GetKey( keycode ) )
+                {
+                    Debug.Log( $"{keycode}" );
+                }
+            }
+        }
     }
 }
