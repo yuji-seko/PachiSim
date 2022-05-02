@@ -28,4 +28,32 @@ MonoBehaviour:
       data:
         m_upstreams:
         - id: 0
+        m_downstreams:
+        - id: 2
+        - id: 3
+        - id: 4
+    00000002:
+      type: {class: Out, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      data:
+        m_upstreams:
+        - id: 1
+        m_downstreams: []
+    00000003:
+      type: {class: Win, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      data:
+        m_upstreams:
+        - id: 1
+        m_downstreams: []
+    00000004:
+      type: {class: Bounce, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      data:
+        m_upstreams:
+        - id: 1
+        m_downstreams:
+        - id: 5
+    00000005:
+      type: {class: Out, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      data:
+        m_upstreams:
+        - id: 4
         m_downstreams: []

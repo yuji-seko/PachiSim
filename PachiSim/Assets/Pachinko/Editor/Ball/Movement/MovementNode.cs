@@ -1,6 +1,8 @@
 ﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Capacity = UnityEditor.Experimental.GraphView.Port.Capacity;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Pachinko.Ball
 {
@@ -10,15 +12,17 @@ namespace Pachinko.Ball
         // Fields( private )
         //=====================================================================
         private Movement m_movement = null;
-        private Port m_upstream = null;
-        private Port m_downstream = null;
+        private Port m_upstreamPort = null;
+        private Port m_downstreamPort = null;
 
         //=====================================================================
         // Properties( public )
         //=====================================================================
         public Movement Movement => m_movement;
-        public Port Upstream => m_upstream;
-        public Port Downstream => m_downstream;
+        public Port Upstream => m_upstreamPort;
+        public Port Downstream => m_downstreamPort;
+        public IReadOnlyList<MovementNode> UpstreamNodes => m_upstreamPort?.connections?.Select( c => c.output?.node as MovementNode ).ToArray();
+        public IReadOnlyList<MovementNode> DownstreamNodes => m_downstreamPort?.connections?.Select( c => c.input?.node as MovementNode ).ToArray();
 
         //=====================================================================
         // Methods( protected )
@@ -36,20 +40,20 @@ namespace Pachinko.Ball
                 if ( movement.IsPossessableUpstreams )
                 {
                     var capacity = movement.PossessableUpstreamsCount == 1 ? Capacity.Single : Capacity.Multi;
-                    m_upstream = CreatePort( Direction.Input, capacity );
-                    m_upstream.portName = "Upstream";
-                    inputContainer.Add( m_upstream );
+                    m_upstreamPort = CreatePort( Direction.Input, capacity );
+                    m_upstreamPort.portName = "Upstream";
+                    inputContainer.Add( m_upstreamPort );
                 }
-                Debug.Log( $"Upstreams: {movement.IsPossessableUpstreams}, {movement.PossessableUpstreamsCount}" );
+                //Debug.Log( $"Upstreams: {movement.IsPossessableUpstreams}, {movement.PossessableUpstreamsCount}" );
 
                 if ( movement.IsPossessableDownstreams )
                 {
                     var capacity = movement.PossessableDownstreamsCount == 1 ? Capacity.Single : Capacity.Multi;
-                    m_downstream = CreatePort( Direction.Output, capacity );
-                    m_downstream.portName = "Downstream";
-                    outputContainer.Add( m_downstream );
+                    m_downstreamPort = CreatePort( Direction.Output, capacity );
+                    m_downstreamPort.portName = "Downstream";
+                    outputContainer.Add( m_downstreamPort );
                 }
-                Debug.Log( $"Downstreams: {movement.IsPossessableDownstreams}, {movement.PossessableDownstreamsCount}" );
+                //Debug.Log( $"Downstreams: {movement.IsPossessableDownstreams}, {movement.PossessableDownstreamsCount}" );
             }
         }
 
@@ -90,8 +94,6 @@ namespace Pachinko.Ball
             title = "Injection";
             capabilities -= Capabilities.Deletable;
         }
-
-        public InjectionNode() : this( new Injection() ) { }
     }
 
     /// <summary>
@@ -99,7 +101,7 @@ namespace Pachinko.Ball
     /// </summary>
     public class BounceNode : MovementNode<Bounce>
     {
-        public BounceNode() : base( new Bounce() )
+        public BounceNode( Bounce bounce ) : base( bounce )
         {
             name = nameof( BounceNode );
             title = "Bounce";
@@ -111,7 +113,7 @@ namespace Pachinko.Ball
     /// </summary>
     public class ChuckerNode : MovementNode<Chucker>
     {
-        public ChuckerNode() : base( new Chucker() )
+        public ChuckerNode( Chucker chucker ) : base( chucker )
         {
             name = nameof( ChuckerNode );
             title = "Chuker";
@@ -123,7 +125,7 @@ namespace Pachinko.Ball
     /// </summary>
     public class OutNode : MovementNode<Out>
     {
-        public OutNode() : base( new Out() )
+        public OutNode( Out _out ) : base( _out )
         {
             name = nameof( OutNode );
             title = "Out";
@@ -135,7 +137,7 @@ namespace Pachinko.Ball
     /// </summary>
     public class WinNode : MovementNode<Win>
     {
-        public WinNode() : base( new Win() )
+        public WinNode( Win win ) : base( win )
         {
             name = nameof( WinNode );
             title = "Win";

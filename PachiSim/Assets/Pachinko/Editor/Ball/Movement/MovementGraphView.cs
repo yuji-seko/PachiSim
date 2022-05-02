@@ -21,7 +21,7 @@ namespace Pachinko.Ball
         //=====================================================================
         // Fields( private )
         //=====================================================================
-        private MovementNodeFactory m_factory = new MovementNodeFactory();
+        private MovementNodeFactory m_nodeFactory = new MovementNodeFactory();
         private InjectionNode m_rootNode = null;
 
         //=====================================================================
@@ -112,18 +112,11 @@ namespace Pachinko.Ball
         {
             Reset();
 
-            if ( ball == null )
-            {
-                m_rootNode = new InjectionNode();
-                AddElement( m_rootNode );
-            }
-            else
-            {
-                m_rootNode = new InjectionNode( ball.Movement as Injection );
-                AddElement( m_rootNode );
-            }
-
+            var injection = ball != null ? ball.Movement as Injection : new Injection();
+            m_rootNode = AddNodeRecursive( injection ) as InjectionNode;
             m_rootNode.Focus();
+
+            m_rootNode.RegisterCallback<GeometryChangedEvent>( RebuildFromInit );
         }
 
         /// <summary>
@@ -150,7 +143,7 @@ namespace Pachinko.Ball
         /// </summary>
         internal bool CreateNode( MovementType movementType, Vector2 position )
         {
-            var node = m_factory.Create( movementType );
+            var node = m_nodeFactory.Create( movementType );
             node.SetPosition( new Rect( position, new Vector2( 100, 100 ) ) );
             AddElement( node );
             return true;
@@ -170,6 +163,40 @@ namespace Pachinko.Ball
             }
 
             return true;
+        }
+
+        private MovementNode AddNodeRecursive( Movement movement )
+        {
+            var node = m_nodeFactory.Create( movement );
+            AddElement( node );
+
+            movement.Downstreams?.ForEach( ( downstream, index ) =>
+            {
+                var downstreamNode = AddNodeRecursive( downstream );
+                var edge = node.Downstream.ConnectTo<Edge>( downstreamNode.Upstream );
+                AddElement( edge );
+            } );
+
+            return node;
+        }
+
+        private void RebuildFromInit( GeometryChangedEvent e )
+        {
+            RebuildLayoutRecursive( m_rootNode );
+            m_rootNode.UnregisterCallback<GeometryChangedEvent>( RebuildFromInit );
+        }
+
+        private void RebuildLayoutRecursive( MovementNode node, Vector2 position = new Vector2() )
+        {
+            var rect = node.GetPosition();
+            node.SetPosition( new Rect( position.x, position.y, rect.width, rect.height ) );
+
+            node.DownstreamNodes?.ForEach( ( downstream, index ) =>
+            {
+                var x = position.x + rect.width + 50;
+                var y = position.y + index * 100;
+                RebuildLayoutRecursive( downstream, new Vector2( x, y ) );
+            } );
         }
     }
 }

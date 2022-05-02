@@ -5,19 +5,26 @@ namespace Pachinko.Ball
         MovementNode Create( MovementType movementType );
     }
 
-    public class MovementNodeFactory : IMovementNodeFactory
+    public sealed class MovementNodeFactory : IMovementNodeFactory
     {
+        private IMovementFactory m_movementFactory = new MovementFactory();
+
+        public MovementNode Create( Movement movement )
+        {
+            switch ( movement.MovementType )
+            {
+                case MovementType.Injection: return new InjectionNode( movement as Injection );
+                case MovementType.Bounce: return new BounceNode( movement as Bounce );
+                case MovementType.Chucker: return new ChuckerNode( movement as Chucker );
+                case MovementType.Out: return new OutNode( movement as Out );
+                case MovementType.Win: return new WinNode( movement as Win );
+                default: return null;
+            }
+        }
+
         public MovementNode Create( MovementType movementType )
         {
-            switch ( movementType )
-            {
-                case MovementType.Injection:    return new InjectionNode();
-                case MovementType.Bounce:       return new BounceNode();
-                case MovementType.Chucker:      return new ChuckerNode();
-                case MovementType.Out:          return new OutNode();
-                case MovementType.Win:          return new WinNode();
-                default:                        return null;
-            }
+            return Create( m_movementFactory.Create( movementType ) );
         }
     }
 }
