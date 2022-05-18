@@ -74,8 +74,8 @@ namespace Pachinko.Ball
             m_assetNameText = rootVisualElement.Query<TextField>( "FileName" ).First();
 
             // ボタン
-            SetButtonEvent( "SaveButton", Save );
-            SetButtonEvent( "ResetButton", () => SetAsset( null ) );
+            rootVisualElement.AddButtonEvent( "SaveButton", Save );
+            rootVisualElement.AddButtonEvent( "ResetButton", () => SetAsset( null ) );
 
             // ノード作成ビュー
             m_view = new MovementGraphView( this )
@@ -119,18 +119,6 @@ namespace Pachinko.Ball
             AssetDatabase.SaveAssets();
 
             Debug.Log( $"{m_ball.Name} is saved" );
-        }
-
-        /// <summary>
-        /// ボタンイベントの設定
-        /// </summary>
-        private void SetButtonEvent( string buttonName, Action onClick )
-        {
-            var button = rootVisualElement.Query<Button>( buttonName ).First();
-            if ( button != null )
-            {
-                button.clicked += onClick;
-            }
         }
     }
 }

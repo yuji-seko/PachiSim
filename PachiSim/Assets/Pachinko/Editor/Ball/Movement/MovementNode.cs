@@ -1,8 +1,11 @@
-﻿using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using Capacity = UnityEditor.Experimental.GraphView.Port.Capacity;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Capacity = UnityEditor.Experimental.GraphView.Port.Capacity;
+using Pachinko;
 
 namespace Pachinko.Ball
 {
@@ -13,16 +16,16 @@ namespace Pachinko.Ball
         //=====================================================================
         private Movement m_movement = null;
         private Port m_upstreamPort = null;
-        private Port m_downstreamPort = null;
+        private PortLayout m_downstreamPortLayout = null;
 
         //=====================================================================
         // Properties( public )
         //=====================================================================
         public Movement Movement => m_movement;
         public Port Upstream => m_upstreamPort;
-        public Port Downstream => m_downstreamPort;
         public IReadOnlyList<MovementNode> UpstreamNodes => m_upstreamPort?.connections?.Select( c => c.output?.node as MovementNode ).ToArray();
-        public IReadOnlyList<MovementNode> DownstreamNodes => m_downstreamPort?.connections?.Select( c => c.input?.node as MovementNode ).ToArray();
+        public IReadOnlyList<MovementNode> DownstreamNodes => m_downstreamPortLayout?.Nodes;
+        public IReadOnlyList<Port> DownstreamPorts => m_downstreamPortLayout?.Ports;
 
         //=====================================================================
         // Methods( protected )
@@ -33,27 +36,13 @@ namespace Pachinko.Ball
         /// </summary>
         protected MovementNode( Movement movement )
         {
+            DebugUtils.LogYellow( $"MovementNode : {movement.MovementType}" );
             m_movement = movement;
 
             if ( movement != null )
             {
-                if ( movement.IsPossessableUpstreams )
-                {
-                    var capacity = movement.PossessableUpstreamsCount == 1 ? Capacity.Single : Capacity.Multi;
-                    m_upstreamPort = CreatePort( Direction.Input, capacity );
-                    m_upstreamPort.portName = "Upstream";
-                    inputContainer.Add( m_upstreamPort );
-                }
-                //Debug.Log( $"Upstreams: {movement.IsPossessableUpstreams}, {movement.PossessableUpstreamsCount}" );
-
-                if ( movement.IsPossessableDownstreams )
-                {
-                    var capacity = movement.PossessableDownstreamsCount == 1 ? Capacity.Single : Capacity.Multi;
-                    m_downstreamPort = CreatePort( Direction.Output, capacity );
-                    m_downstreamPort.portName = "Downstream";
-                    outputContainer.Add( m_downstreamPort );
-                }
-                //Debug.Log( $"Downstreams: {movement.IsPossessableDownstreams}, {movement.PossessableDownstreamsCount}" );
+                BuildUpstreamLayout();
+                BuildDownstreamLayout();
             }
         }
 
@@ -64,9 +53,45 @@ namespace Pachinko.Ball
         /// <summary>
         /// ポート作成
         /// </summary>
-        protected static Port CreatePort( Direction direction, Capacity capacity )
+        private static Port CreatePort( Direction direction, Capacity capacity )
         {
             return Port.Create<Edge>( Orientation.Horizontal, direction, capacity, typeof( Port ) );
+        }
+
+        /// <summary>
+        /// 上流ポートレイアウトの構築
+        /// </summary>
+        private void BuildUpstreamLayout()
+        {
+            DebugUtils.LogWhite( $"\tBuildUpstreamLayout() : {m_movement.IsPossessableUpstreams}, {m_movement.PossessableUpstreamsCount}" );
+
+            if ( !m_movement.IsPossessableUpstreams ) return;
+
+            var capacity = m_movement.PossessableUpstreamsCount == 1 ? Capacity.Single : Capacity.Multi;
+            m_upstreamPort = CreatePort( Direction.Input, capacity );
+            m_upstreamPort.portName = "Upstream";
+            inputContainer.Add( m_upstreamPort );
+        }
+
+        /// <summary>
+        /// 下流ポートレイアウトの構築
+        /// </summary>
+        private void BuildDownstreamLayout()
+        {
+            DebugUtils.LogWhite( $"\tBuildDownstreamLayout() : {m_movement.IsPossessableDownstreams}, {m_movement.PossessableDownstreamsCount}, {m_movement.Downstreams.Count}" );
+
+            if ( !m_movement.IsPossessableDownstreams ) return;
+
+            if ( m_movement.PossessableDownstreamsCount == 1 )
+            {
+                m_downstreamPortLayout = new SinglePortLayout();
+            }
+            else
+            {
+                m_downstreamPortLayout = new MultiPortLayout( m_movement.Downstreams.Count );
+            }
+
+            outputContainer.Add( m_downstreamPortLayout );
         }
     }
 
@@ -91,7 +116,7 @@ namespace Pachinko.Ball
         public InjectionNode( Injection injection ) : base( injection )
         {
             name = nameof( InjectionNode );
-            title = "Injection";
+            title = nameof( Injection );
             capabilities -= Capabilities.Deletable;
         }
     }
@@ -104,7 +129,7 @@ namespace Pachinko.Ball
         public BounceNode( Bounce bounce ) : base( bounce )
         {
             name = nameof( BounceNode );
-            title = "Bounce";
+            title = nameof( Bounce );
         }
     }
 
@@ -116,31 +141,31 @@ namespace Pachinko.Ball
         public ChuckerNode( Chucker chucker ) : base( chucker )
         {
             name = nameof( ChuckerNode );
-            title = "Chuker";
+            title = nameof( Chucker );
         }
     }
 
     /// <summary>
     /// アウト
     /// </summary>
-    public class OutNode : MovementNode<Out>
+    public class OutPocketNode : MovementNode<OutPocket>
     {
-        public OutNode( Out _out ) : base( _out )
+        public OutPocketNode( OutPocket _out ) : base( _out )
         {
-            name = nameof( OutNode );
-            title = "Out";
+            name = nameof( OutPocketNode );
+            title = nameof( OutPocket );
         }
     }
 
     /// <summary>
     /// 入賞
     /// </summary>
-    public class WinNode : MovementNode<Win>
+    public class WinPocketNode : MovementNode<WinPocket>
     {
-        public WinNode( Win win ) : base( win )
+        public WinPocketNode( WinPocket win ) : base( win )
         {
-            name = nameof( WinNode );
-            title = "Win";
+            name = nameof( WinPocketNode );
+            title = nameof( WinPocket );
         }
     }
 }

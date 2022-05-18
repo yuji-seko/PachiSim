@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9612c5e8b82dc7a438352c8b79fc41f8, type: 3}
-  m_Name: BallMovement
+  m_Name: BallMovementAsset
   m_EditorClassIdentifier: 
-  m_name: Test1
+  m_name: 
   m_movement:
     id: 0
   references:
@@ -31,29 +31,22 @@ MonoBehaviour:
         m_downstreams:
         - id: 2
         - id: 3
-        - id: 4
     00000002:
-      type: {class: Out, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      type: {class: Chucker, ns: Pachinko.Ball, asm: Assembly-CSharp}
       data:
         m_upstreams:
         - id: 1
-        m_downstreams: []
+        m_downstreams:
+        - id: 4
     00000003:
-      type: {class: Win, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      type: {class: WinPocket, ns: Pachinko.Ball, asm: Assembly-CSharp}
       data:
         m_upstreams:
         - id: 1
         m_downstreams: []
     00000004:
-      type: {class: Bounce, ns: Pachinko.Ball, asm: Assembly-CSharp}
+      type: {class: OutPocket, ns: Pachinko.Ball, asm: Assembly-CSharp}
       data:
         m_upstreams:
-        - id: 1
-        m_downstreams:
-        - id: 5
-    00000005:
-      type: {class: Out, ns: Pachinko.Ball, asm: Assembly-CSharp}
-      data:
-        m_upstreams:
-        - id: 4
+        - id: 2
         m_downstreams: []

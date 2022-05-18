@@ -112,11 +112,11 @@ namespace Pachinko.Ball
         {
             Reset();
 
-            var injection = ball != null ? ball.Movement as Injection : new Injection();
+            var injection = ball != null && ball.Movement != null ? ball.Movement as Injection : new Injection();
             m_rootNode = AddNodeRecursive( injection ) as InjectionNode;
             m_rootNode.Focus();
 
-            m_rootNode.RegisterCallback<GeometryChangedEvent>( RebuildFromInit );
+            m_rootNode.RegisterCallback<GeometryChangedEvent>( RebuildLayoutFromInit );
         }
 
         /// <summary>
@@ -165,6 +165,9 @@ namespace Pachinko.Ball
             return true;
         }
 
+        /// <summary>
+        /// ノード追加
+        /// </summary>
         private MovementNode AddNodeRecursive( Movement movement )
         {
             var node = m_nodeFactory.Create( movement );
@@ -172,20 +175,27 @@ namespace Pachinko.Ball
 
             movement.Downstreams?.ForEach( ( downstream, index ) =>
             {
+                var port = node.DownstreamPorts[ index ];
                 var downstreamNode = AddNodeRecursive( downstream );
-                var edge = node.Downstream.ConnectTo<Edge>( downstreamNode.Upstream );
+                var edge = port.ConnectTo<Edge>( downstreamNode.Upstream );
                 AddElement( edge );
             } );
 
             return node;
         }
 
-        private void RebuildFromInit( GeometryChangedEvent e )
+        /// <summary>
+        /// レイアウト再構築（初回用）
+        /// </summary>
+        private void RebuildLayoutFromInit( GeometryChangedEvent e )
         {
             RebuildLayoutRecursive( m_rootNode );
-            m_rootNode.UnregisterCallback<GeometryChangedEvent>( RebuildFromInit );
+            m_rootNode.UnregisterCallback<GeometryChangedEvent>( RebuildLayoutFromInit );
         }
 
+        /// <summary>
+        /// レイアウト再構築
+        /// </summary>
         private void RebuildLayoutRecursive( MovementNode node, Vector2 position = new Vector2() )
         {
             var rect = node.GetPosition();

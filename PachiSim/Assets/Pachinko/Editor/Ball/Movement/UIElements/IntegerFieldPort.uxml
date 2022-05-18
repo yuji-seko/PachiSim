@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="BaseLayout" style="flex-direction: row-reverse; justify-content: flex-start;">
+        <ui:VisualElement name="InputFieldBase" style="width: 40px;" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; width: 40px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -16,8 +16,8 @@ namespace Pachinko.Ball
                 case MovementType.Injection: return new InjectionNode( movement as Injection );
                 case MovementType.Bounce: return new BounceNode( movement as Bounce );
                 case MovementType.Chucker: return new ChuckerNode( movement as Chucker );
-                case MovementType.Out: return new OutNode( movement as Out );
-                case MovementType.Win: return new WinNode( movement as Win );
+                case MovementType.OutPocket: return new OutPocketNode( movement as OutPocket );
+                case MovementType.WinPocket: return new WinPocketNode( movement as WinPocket );
                 default: return null;
             }
         }

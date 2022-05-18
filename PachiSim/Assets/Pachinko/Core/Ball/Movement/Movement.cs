@@ -9,8 +9,8 @@ namespace Pachinko.Ball
         Injection,
         Bounce,
         Chucker,
-        Out,
-        Win,
+        OutPocket,
+        WinPocket,
     }
 
     /// <summary>
@@ -104,9 +104,9 @@ namespace Pachinko.Ball
     /// アウト
     /// </summary>
     [Serializable]
-    public class Out : Movement
+    public class OutPocket : Movement
     {
-        public override MovementType MovementType => MovementType.Out;
+        public override MovementType MovementType => MovementType.OutPocket;
 
         public override bool IsPossessableUpstreams => true;
         public override int PossessableUpstreamsCount => 1;
@@ -119,9 +119,9 @@ namespace Pachinko.Ball
     /// 入賞
     /// </summary>
     [Serializable]
-    public class Win : Movement
+    public class WinPocket : Movement
     {
-        public override MovementType MovementType => MovementType.Win;
+        public override MovementType MovementType => MovementType.WinPocket;
 
         public override bool IsPossessableUpstreams => true;
         public override int PossessableUpstreamsCount => 1;
